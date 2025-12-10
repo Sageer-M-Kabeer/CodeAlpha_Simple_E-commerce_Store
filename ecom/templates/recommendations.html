@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Product Recommendations - Cedars Shoprite{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5 fw-bold text-success mb-2">Product Recommendations</h1>
+                    <p class="lead text-muted">Personalized suggestions based on your shopping preferences</p>
+                </div>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-success">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personalized Recommendations -->
+    {% if personalized_recommendations %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-user-check me-2"></i>
+                        Recommended Just For You
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for rec in personalized_recommendations %}
+                        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                            <div class="card product-card h-100">
+                                <div class="position-relative">
+                                    {% if rec.product.image %}
+                                        <img src="{{ rec.product.image.url }}" 
+                                             class="card-img-top" 
+                                             alt="{{ rec.product.name }}"
+                                             style="height: 200px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                             style="height: 200px;">
+                                            <i class="fas fa-image fa-3x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Recommendation Score -->
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-star me-1"></i>
+                                            {{ rec.score|floatformat:0 }}%
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Stock Status -->
+                                    <div class="position-absolute top-0 start-0 m-2">
+                                        {% if rec.in_stock > 10 %}
+                                            <span class="badge bg-success">In Stock</span>
+                                        {% elif rec.in_stock > 0 %}
+                                            <span class="badge bg-warning">Low Stock</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Out of Stock</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ rec.product.name }}</h6>
+                                    <p class="card-text text-muted small mb-2">
+                                        {{ rec.product.category.name }}
+                                    </p>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="text-success mb-0">N{{ rec.product.price }}</h5>
+                                        <small class="text-muted">{{ rec.total_sold }} sold</small>
+                                    </div>
+                                    
+                                    <!-- Recommendation Reasons -->
+                                    {% if rec.recommendation_reasons %}
+                                    <div class="recommendation-reasons">
+                                        {% for reason in rec.recommendation_reasons %}
+                                        <small class="text-muted d-block mb-1">
+                                            <i class="fas fa-check-circle text-success me-1"></i>
+                                            {{ reason }}
+                                        </small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="card-footer bg-transparent">
+                                    <div class="btn-group w-100">
+                                        <a href="{% url 'product_detail' rec.product.id %}" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <a href="{% url 'add_to_cart' rec.product.id %}" 
+                                           class="btn btn-success btn-sm {% if rec.in_stock == 0 %}disabled{% endif %}">
+                                            <i class="fas fa-cart-plus"></i> Add
+                                        </a>
+                                        <a href="{% url 'add_to_wishlist' rec.product.id %}" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-heart"></i> Save
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-4"></i>
+                    <h3>No Recommendations Yet</h3>
+                    <p class="text-muted mb-4">Start shopping to get personalized recommendations based on your preferences.</p>
+                    <a href="{% url 'dashboard' %}" class="btn btn-success btn-lg">
+                        <i class="fas fa-shopping-bag me-2"></i>
+                        Start Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

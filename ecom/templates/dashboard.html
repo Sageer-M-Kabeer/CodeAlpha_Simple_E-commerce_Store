@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Fresh Groceries - Cedars Shoprite{% endblock %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="display-4 fw-bold text-success mb-3">Welcome to Cedars Shoprite</h1>
+        <p class="lead text-muted">Fresh groceries, delivered with care</p>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card bg-primary text-white text-center">
+            <div class="card-body py-3">
+                <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                <h5 class="mb-0">{{ cart_count }}</h5>
+                <small>Cart Items</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card bg-danger text-white text-center">
+            <div class="card-body py-3">
+                <i class="fas fa-heart fa-2x mb-2"></i>
+                <h5 class="mb-0">{{ wishlist_count }}</h5>
+                <small>Wishlist</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card bg-success text-white text-center">
+            <div class="card-body py-3">
+                <i class="fas fa-star fa-2x mb-2"></i>
+                <h5 class="mb-0">{{ recommendations_count }}</h5>
+                <small>Recommendations</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="card bg-warning text-white text-center">
+            <div class="card-body py-3">
+                <i class="fas fa-tags fa-2x mb-2"></i>
+                <h5 class="mb-0">{{ products.count }}</h5>
+                <small>Products</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="row mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="card product-card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Fast Delivery</h5>
+                <p class="card-text">Get your fresh groceries delivered within 2 hours</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card product-card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Fresh Quality</h5>
+                <p class="card-text">100% fresh and quality guaranteed products</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card product-card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-percent fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Best Prices</h5>
+                <p class="card-text">Competitive prices with daily discounts</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== RECOMMENDATIONS SECTION ===== -->
+{% if recommendations %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-success mb-0">
+                <i class="fas fa-magic me-2"></i>
+                Recommended For You
+            </h2>
+            <span class="badge bg-success fs-6">{{ recommendations_count }} items</span>
+        </div>
+        
+        <div class="row">
+            {% for rec in recommendations %}
+            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                <div class="card product-card h-100 recommendation-card">
+                    <div class="position-relative">
+                        {% if rec.product.image %}
+                            <img src="{{ rec.product.image.url }}" 
+                                 class="card-img-top" 
+                                 alt="{{ rec.product.name }}"
+                                 style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                 style="height: 200px;">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Recommendation Badge -->
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-success">
+                                <i class="fas fa-star me-1"></i>
+                                {{ rec.score|floatformat:0 }}%
+                            </span>
+                        </div>
+                        
+                        <!-- Stock Status -->
+                        <div class="position-absolute top-0 start-0 m-2">
+                            {% if rec.in_stock > 10 %}
+                                <span class="badge bg-success">In Stock</span>
+                            {% elif rec.in_stock > 0 %}
+                                <span class="badge bg-warning">Low Stock</span>
+                            {% else %}
+                                <span class="badge bg-danger">Out of Stock</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h6 class="card-title">{{ rec.product.name }}</h6>
+                        <p class="card-text text-muted small mb-2">
+                            {{ rec.product.category.name }}
+                        </p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="text-success mb-0">N{{ rec.product.price }}</h5>
+                            <small class="text-muted">{{ rec.total_sold }} sold</small>
+                        </div>
+                        
+                        <!-- Recommendation Reason -->
+                        {% if rec.recommendation_reasons %}
+                        <div class="recommendation-reason">
+                            <small class="text-muted">
+                                <i class="fas fa-bullseye me-1 text-success"></i>
+                                {{ rec.recommendation_reasons.0 }}
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100">
+                            <a href="{% url 'product_detail' rec.product.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'add_to_cart' rec.product.id %}" 
+                               class="btn btn-success btn-sm {% if rec.in_stock == 0 %}disabled{% endif %}">
+                                <i class="fas fa-cart-plus"></i>
+                            </a>
+                            <a href="{% url 'add_to_wishlist' rec.product.id %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- View All Recommendations Button -->
+        <div class="text-center mt-4">
+            <a href="{% url 'recommendations' %}" class="btn btn-success btn-lg">
+                <i class="fas fa-arrow-right me-2"></i>
+                View All Recommendations
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Popular Categories -->
+{% if popular_categories %}
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="mb-4 text-success">
+            <i class="fas fa-tags me-2"></i>
+            Popular Categories
+        </h2>
+        <div class="row">
+            {% for category in popular_categories %}
+            <div class="col-md-2 col-4 mb-3">
+                <a href="{% url 'category_products' category.slug %}" 
+                   class="card category-card text-center text-decoration-none">
+                    <div class="card-body py-4">
+                        <i class="fas fa-folder fa-2x text-success mb-2"></i>
+                        <h6 class="card-title text-dark mb-0">{{ category.name }}</h6>
+                        <small class="text-muted">{{ category.product_count }} products</small>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Quick Cart Preview -->
+{% if cart_items %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-shopping-cart text-primary me-2"></i>
+                    Your Cart ({{ cart_count }} items)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for item in cart_items %}
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" 
+                                     class="rounded me-3" 
+                                     alt="{{ item.product.name }}"
+                                     width="60" height="60" style="object-fit: cover;">
+                            {% else %}
+                                <div class="rounded bg-light d-flex align-items-center justify-content-center me-3" 
+                                     width="60" height="60">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-1">{{ item.product.name }}</h6>
+                                <p class="text-muted mb-0">Qty: {{ item.quantity }}</p>
+                                <strong class="text-success">N{{ item.subtotal }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{% url 'view_cart' %}" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart me-2"></i>
+                        View Full Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- All Products Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-success mb-0">
+                <i class="fas fa-store me-2"></i>
+                All Products
+            </h2>
+            <span class="badge bg-success fs-6">{{ products.count }} products</span>
+        </div>
+        
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card product-card h-100">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-image fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                        <h5 class="text-success">N{{ product.price }}</h5>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100">
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-cart-plus"></i>
+                            </a>
+                            <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <h4>No products available yet!</h4>
+                    <p>Check back soon for our fresh grocery collection.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+.product-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #e9ecef;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.recommendation-card {
+    border-left: 4px solid #28a745;
+}
+
+.category-card {
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.category-card:hover {
+    border-color: #28a745;
+    transform: translateY(-3px);
+}
+
+.recommendation-reason {
+    border-left: 3px solid #28a745;
+    padding-left: 10px;
+    margin-top: 8px;
+}
+
+.card-img-top {
+    transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.badge {
+    font-size: 0.7rem;
+}
+</style>
+{% endblock %}

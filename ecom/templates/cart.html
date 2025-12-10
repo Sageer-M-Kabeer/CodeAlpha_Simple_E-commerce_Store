@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Shopping Cart - Cedars Shoprite{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4 text-success"><i class="fas fa-shopping-cart me-2"></i>Your Shopping Cart</h2>
+        
+        {% if cart_total == 0 %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">Your cart is empty</h3>
+            <p class="text-muted">Start adding some fresh groceries to your cart!</p>
+            <a href="{% url 'products' %}" class="btn btn-success btn-lg mt-3">
+                <i class="fas fa-store me-2"></i>Start Shopping
+            </a>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                             class="rounded me-3" width="60" height="60" style="object-fit: cover;">
+                                        {% endif %}
+                                        <div>
+                                            <h6 class="mb-0">{{ item.product.name }}</h6>
+                                            <small class="text-muted">{{ item.product.description|truncatewords:5 }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill fs-6">{{ item.quantity }}</span>
+                                </td>
+                                <td class="fw-bold">N{{ item.product.price }}</td>
+                                <td class="fw-bold text-success">N{{ item.product.price|floatformat:2 }}</td>
+                                <td>
+                                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-outline-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <a href="{% url 'products' %}" class="btn btn-outline-success">
+                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="border-top pt-3">
+                            <h4 class="text-success">Total: N{{ cart_total|floatformat:2 }}</h4>
+                            <a href="{% url 'place_order' %}" class="btn btn-success btn-lg mt-2">
+                                <i class="fas fa-check-circle me-2"></i>Place Order
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

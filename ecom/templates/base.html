@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cedars Shoprite - Premium Groceries{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #4caf50;
+            --accent-color: #ff9800;
+            --success-color: #388e3c;
+            --warning-color: #f57c00;
+            --light-bg: #f8f9fa;
+            --dark-bg: #1b5e20;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #1b5e20, #4caf50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .btn {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            margin: 0 3px;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4caf50, #388e3c);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #388e3c, #2e7d32);
+        }
+
+        .btn-info {
+            background: linear-gradient(45deg, #26a69a, #00796b);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #e53935, #c62828);
+        }
+
+        .container.mt-4 {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 25px !important;
+            margin-bottom: 25px;
+            min-height: calc(100vh - 180px);
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .navbar {
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, var(--dark-bg), #2e7d32) !important;
+            padding: 12px 0;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+            font-weight: 500;
+            transition: var(--transition);
+            margin: 0 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+            transform: translateY(-1px);
+        }
+
+        .product-card {
+            transition: var(--transition);
+            border: none;
+            box-shadow: var(--shadow);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--dark-bg), #2e7d32);
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 40px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .btn-position-relative {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.6rem;
+            }
+            
+            .btn {
+                padding: 6px 15px;
+                font-size: 0.9rem;
+                margin: 2px;
+            }
+            
+            .container.mt-4 {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a href="{% url 'dashboard' %}" class="navbar-brand">
+                <i class="fas fa-shopping-basket me-2"></i>Cedars Shoprite
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard' %}" class="nav-link">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'products' %}" class="nav-link">
+                            <i class="fas fa-store me-1"></i>Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'cart' %}" class="btn btn-warning btn-sm btn-position-relative">
+                            <i class="fas fa-shopping-cart me-1"></i>Cart
+                            <span class="cart-badge">{{ user.cart.cartitem_set.count|default:0 }}</span>
+                        </a>
+                        <a href="{% url 'orders' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-clipboard-list me-1"></i>Orders
+                        </a>
+                        <a href="{% url 'profile' %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-user me-1"></i>{{ user.username }}
+                        </a>
+                        <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-success btn-sm">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <a href="{% url 'signup' %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-user-plus me-1"></i>Signup
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}
+        <!-- Main content will be injected here -->
+        {% endblock %}
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Cedars Shoprite. Fresh groceries delivered to your doorstep.</p>
+            <div class="social-links">
+                <a href="#" class="text-light me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                <a href="#" class="text-light"><i class="fab fa-linkedin fa-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

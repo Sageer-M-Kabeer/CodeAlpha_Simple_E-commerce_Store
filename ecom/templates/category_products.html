@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ category.name }} - Cedars Shoprite{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="display-5 fw-bold text-success mb-2">{{ category.name }}</h1>
+                <p class="lead text-muted">{{ category.description }}</p>
+            </div>
+            <a href="{% url 'products' %}" class="btn btn-outline-success">
+                <i class="fas fa-arrow-left me-2"></i>
+                Back to All Products
+            </a>
+        </div>
+        
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Showing {{ products|length }} product{{ products|length|pluralize }} in this category
+        </div>
+    </div>
+</div>
+
+{% if products %}
+<div class="row">
+    {% for product in products %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card product-card h-100">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="fas fa-image fa-3x text-muted"></i>
+            </div>
+            {% endif %}
+            
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                <h5 class="text-success">N{{ product.price }}</h5>
+                
+                <!-- Stock Status -->
+                {% if product.stock > 10 %}
+                    <span class="badge bg-success">In Stock</span>
+                {% elif product.stock > 0 %}
+                    <span class="badge bg-warning">Low Stock</span>
+                {% else %}
+                    <span class="badge bg-danger">Out of Stock</span>
+                {% endif %}
+            </div>
+            
+            <div class="card-footer bg-transparent">
+                <div class="btn-group w-100">
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success btn-sm {% if product.stock == 0 %}disabled{% endif %}">
+                        <i class="fas fa-cart-plus"></i>
+                    </a>
+                    <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+    <h3 class="text-muted">No products in this category</h3>
+    <p class="text-muted">Check back soon for new products in {{ category.name }}.</p>
+    <a href="{% url 'products' %}" class="btn btn-success btn-lg mt-3">
+        <i class="fas fa-store me-2"></i>Browse All Products
+    </a>
+</div>
+{% endif %}
+
+{% if products %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="text-success">
+                    <i class="fas fa-shopping-bag me-2"></i>
+                    {{ products|length }} Product{{ products|length|pluralize }} Found
+                </h5>
+                <p class="text-muted mb-0">
+                    Enjoy shopping from our {{ category.name }} collection. All products are fresh and quality guaranteed.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.product-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #e9ecef;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.card-img-top {
+    transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.badge {
+    font-size: 0.7rem;
+}
+
+.btn-group .btn {
+    border-radius: 5px;
+    margin: 0 1px;
+}
+</style>
+{% endblock %}
