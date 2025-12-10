@@ -1,7 +1,8 @@
 ﻿# Simple E-commerce Store with recommendation system using apriori alorithm
- ##features
- -Shopping cart
- -Product details page
- -Order processing
- -User registration/login
+ ## features
+ - Shopping cart
+ - Product details page
+ - Order processing
+ - User registration/login
+
 
